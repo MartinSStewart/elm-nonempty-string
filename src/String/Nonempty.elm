@@ -1,13 +1,14 @@
 module String.Nonempty exposing
     ( Nonempty(..), length, reverse
-    , append, append_, concat
-    , slice, left, right, dropLeft, dropRight
+    , append, append_, concat, fromString, toString
+    , slice, left, right, dropLeft, dropRight, head, tail
+    , contains, startsWith, endsWith, indexes, indices
     , toInt, fromInt
     , toFloat, fromFloat
     , fromChar, cons, uncons
+    , toNonemptyList, fromNonemptyList
     , toUpper, toLower, pad, padLeft, padRight, trim, trimLeft, trimRight
     , map, filter, foldl, foldr, any, all
-    , fromNonemptyList, fromString, head, tail, toNonemptyList, toString
     )
 
 {-| A string that cannot be empty. The head and tail can be accessed without Maybes. Most other string functions are
@@ -19,14 +20,14 @@ available.
 @docs Nonempty, length, reverse
 
 
-# Building and Splitting
+# Building
 
-@docs append, append_, concat
+@docs append, append_, concat, fromString, toString
 
 
 # Get Substrings
 
-@docs slice, left, right, dropLeft, dropRight
+@docs slice, left, right, dropLeft, dropRight, head, tail
 
 
 # Check for Substrings
@@ -51,7 +52,7 @@ available.
 
 # List Conversions
 
-@docs toList, fromList
+@docs toNonemptyList, fromNonemptyList
 
 
 # Formatting
@@ -355,6 +356,45 @@ head (Nonempty head_ _) =
 tail : Nonempty -> String
 tail (Nonempty _ tail_) =
     tail_
+
+
+{-| See if the second string contains the first one.
+-}
+contains : String -> Nonempty -> Bool
+contains substring =
+    toString >> String.contains substring
+
+
+{-| See if the second string starts with the first one.
+-}
+startsWith : String -> Nonempty -> Bool
+startsWith prefix =
+    toString >> String.startsWith prefix
+
+
+{-| See if the second string ends with the first one.
+-}
+endsWith : String -> Nonempty -> Bool
+endsWith prefix =
+    toString >> String.endsWith prefix
+
+
+{-| Get all of the indexes for a substring in another string.
+
+indexes "i" (Nonempty 'M' "ississippi") == [1,4,7,10]
+indexes "ss" (Nonempty 'M' "ississippi") == [2,5]
+
+-}
+indexes : String -> Nonempty -> List Int
+indexes text =
+    toString >> String.indexes text
+
+
+{-| Alias for `indexes`.
+-}
+indices : String -> Nonempty -> List Int
+indices text =
+    toString >> String.indices text
 
 
 {-| To be used internally when we are certain that the string is already nonempty.
