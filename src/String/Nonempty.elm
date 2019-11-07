@@ -381,8 +381,9 @@ endsWith prefix =
 
 {-| Get all of the indexes for a substring in another string.
 
-indexes "i" (Nonempty 'M' "ississippi") == [1,4,7,10]
-indexes "ss" (Nonempty 'M' "ississippi") == [2,5]
+    indexes "i" (Nonempty 'M' "ississippi") == [ 1, 4, 7, 10 ]
+
+    indexes "ss" (Nonempty 'M' "ississippi") == [ 2, 5 ]
 
 -}
 indexes : String -> Nonempty -> List Int
