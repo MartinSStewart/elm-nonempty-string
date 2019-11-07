@@ -3,7 +3,7 @@
     "name": "MartinSStewart/elm-nonempty-string",
     "summary": "Create strings that contain at least a single character.",
     "license": "BSD-3-Clause",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "exposed-modules": [
         "String.Nonempty"
     ],
