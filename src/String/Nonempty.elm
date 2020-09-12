@@ -351,7 +351,7 @@ head (Nonempty head_ _) =
     head_
 
 
-{-| Return all the character after the first one.
+{-| Return all the characters after the first one.
 -}
 tail : Nonempty -> String
 tail (Nonempty _ tail_) =
