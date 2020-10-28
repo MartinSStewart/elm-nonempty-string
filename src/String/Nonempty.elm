@@ -1,5 +1,5 @@
 module String.Nonempty exposing
-    ( Nonempty(..), length, reverse
+    ( NonemptyString(..), length, reverse
     , append, append_, concat, fromString, toString
     , slice, left, right, dropLeft, dropRight, head, tail
     , contains, startsWith, endsWith, indexes, indices
@@ -17,7 +17,7 @@ available.
 
 # Strings
 
-@docs Nonempty, length, reverse
+@docs NonemptyString, length, reverse
 
 
 # Building
@@ -73,27 +73,27 @@ import List.Nonempty
 
 {-| A string with at least one character.
 -}
-type Nonempty
-    = Nonempty Char String
+type NonemptyString
+    = NonemptyString Char String
 
 
 {-| Get the length of a nonempty string.
 -}
-length : Nonempty -> Int
+length : NonemptyString -> Int
 length =
     toString >> String.length
 
 
 {-| Reverse a string.
 -}
-reverse : Nonempty -> Nonempty
+reverse : NonemptyString -> NonemptyString
 reverse text =
     toString text |> String.reverse |> unsafeFromString
 
 
 {-| Append a string onto the beginning of a nonempty string.
 -}
-append : String -> Nonempty -> Nonempty
+append : String -> NonemptyString -> NonemptyString
 append first second =
     case fromString first of
         Just firstNonempty ->
@@ -105,14 +105,14 @@ append first second =
 
 {-| Append a string onto the end of a nonempty string.
 -}
-append_ : Nonempty -> String -> Nonempty
-append_ (Nonempty head_ tail_) second =
-    Nonempty head_ (tail_ ++ second)
+append_ : NonemptyString -> String -> NonemptyString
+append_ (NonemptyString head_ tail_) second =
+    NonemptyString head_ (tail_ ++ second)
 
 
 {-| Concatenate many nonempty strings into one.
 -}
-concat : List.Nonempty.Nonempty Nonempty -> Nonempty
+concat : List.Nonempty.Nonempty NonemptyString -> NonemptyString
 concat texts =
     List.Nonempty.foldl1 (\a b -> append_ b (toString a)) texts
 
@@ -120,7 +120,7 @@ concat texts =
 {-| Take a substring given a start and end index. Negative indexes
 are taken starting from the _end_ of the list.
 
-    text = Nonempty 's' "nakes on a plane!"
+    text = NonemptyString 's' "nakes on a plane!"
 
     slice  7  9 text == "on"
     slice  0  6 text == "snakes"
@@ -128,210 +128,210 @@ are taken starting from the _end_ of the list.
     slice -6 -1 text == "plane"
 
 -}
-slice : Int -> Int -> Nonempty -> String
+slice : Int -> Int -> NonemptyString -> String
 slice a b =
     toString >> String.slice a b
 
 
 {-| Take _n_ characters from the left side of a nonempty string.
 -}
-left : Int -> Nonempty -> String
+left : Int -> NonemptyString -> String
 left n =
     toString >> String.left n
 
 
 {-| Take _n_ characters from the right side of a nonempty string.
 -}
-right : Int -> Nonempty -> String
+right : Int -> NonemptyString -> String
 right n =
     toString >> String.right n
 
 
 {-| Drop _n_ characters from the left side of a nonempty string.
 -}
-dropLeft : Int -> Nonempty -> String
+dropLeft : Int -> NonemptyString -> String
 dropLeft n =
     toString >> String.dropLeft n
 
 
 {-| Drop _n_ characters from the right side of a nonempty string.
 -}
-dropRight : Int -> Nonempty -> String
+dropRight : Int -> NonemptyString -> String
 dropRight n =
     toString >> String.dropRight n
 
 
 {-| Try to convert a string into an int, failing on improperly formatted nonempty strings.
 -}
-toInt : Nonempty -> Maybe Int
+toInt : NonemptyString -> Maybe Int
 toInt =
     toString >> String.toInt
 
 
-{-| Convert an `Int` to a `Nonempty`.
+{-| Convert an `Int` to a `NonemptyString`.
 -}
-fromInt : Int -> Nonempty
+fromInt : Int -> NonemptyString
 fromInt =
     String.fromInt >> unsafeFromString
 
 
 {-| Try to convert a string into a float, failing on improperly formatted nonempty strings.
 -}
-toFloat : Nonempty -> Maybe Float
+toFloat : NonemptyString -> Maybe Float
 toFloat =
     toString >> String.toFloat
 
 
-{-| Convert a `Float` to a `Nonempty`.
+{-| Convert a `Float` to a `NonemptyString`.
 -}
-fromFloat : Float -> Nonempty
+fromFloat : Float -> NonemptyString
 fromFloat =
     String.fromFloat >> unsafeFromString
 
 
 {-| Create a string from a given character.
 
-    fromChar 'a' == Nonempty 'a' ""
+    fromChar 'a' == NonemptyString 'a' ""
 
 -}
-fromChar : Char -> Nonempty
+fromChar : Char -> NonemptyString
 fromChar char =
-    Nonempty char ""
+    NonemptyString char ""
 
 
 {-| Add a character to the beginning of a nonempty string.
 -}
-cons : Char -> Nonempty -> Nonempty
-cons char (Nonempty head_ tail_) =
-    Nonempty char (String.cons head_ tail_)
+cons : Char -> NonemptyString -> NonemptyString
+cons char (NonemptyString head_ tail_) =
+    NonemptyString char (String.cons head_ tail_)
 
 
 {-| Split a nonempty string into its head and tail. This lets you pattern match on strings exactly as you would with lists.
 -}
-uncons : Nonempty -> ( Char, String )
-uncons (Nonempty head_ tail_) =
+uncons : NonemptyString -> ( Char, String )
+uncons (NonemptyString head_ tail_) =
     ( head_, tail_ )
 
 
 {-| Convert a nonempty string to a nonempty list of characters.
 -}
-toNonemptyList : Nonempty -> List.Nonempty.Nonempty Char
-toNonemptyList (Nonempty head_ tail_) =
+toNonemptyList : NonemptyString -> List.Nonempty.Nonempty Char
+toNonemptyList (NonemptyString head_ tail_) =
     List.Nonempty.Nonempty head_ (String.toList tail_)
 
 
 {-| Convert a nonempty list of characters into a nonempty string.
 -}
-fromNonemptyList : List.Nonempty.Nonempty Char -> Nonempty
+fromNonemptyList : List.Nonempty.Nonempty Char -> NonemptyString
 fromNonemptyList (List.Nonempty.Nonempty head_ tail_) =
-    Nonempty head_ (String.fromList tail_)
+    NonemptyString head_ (String.fromList tail_)
 
 
 {-| Convert a string to all upper case. Useful for case-insensitive comparisons and VIRTUAL YELLING.
 -}
-toUpper : Nonempty -> Nonempty
-toUpper (Nonempty head_ tail_) =
-    Nonempty (Char.toUpper head_) (String.toUpper tail_)
+toUpper : NonemptyString -> NonemptyString
+toUpper (NonemptyString head_ tail_) =
+    NonemptyString (Char.toUpper head_) (String.toUpper tail_)
 
 
 {-| Convert a string to all lower case. Useful for case-insensitive comparisons.
 -}
-toLower : Nonempty -> Nonempty
-toLower (Nonempty head_ tail_) =
-    Nonempty (Char.toLower head_) (String.toLower tail_)
+toLower : NonemptyString -> NonemptyString
+toLower (NonemptyString head_ tail_) =
+    NonemptyString (Char.toLower head_) (String.toLower tail_)
 
 
 {-| Pad a nonempty string on both sides until it has a given length.
 -}
-pad : Int -> Char -> Nonempty -> Nonempty
+pad : Int -> Char -> NonemptyString -> NonemptyString
 pad n char =
     toString >> String.pad n char >> unsafeFromString
 
 
 {-| Pad a nonempty string on the left until it has a given length.
 -}
-padLeft : Int -> Char -> Nonempty -> Nonempty
+padLeft : Int -> Char -> NonemptyString -> NonemptyString
 padLeft n char =
     toString >> String.padLeft n char >> unsafeFromString
 
 
 {-| Pad a nonempty string on the right until it has a given length.
 -}
-padRight : Int -> Char -> Nonempty -> Nonempty
+padRight : Int -> Char -> NonemptyString -> NonemptyString
 padRight n char =
     toString >> String.padRight n char >> unsafeFromString
 
 
 {-| Get rid of whitespace on both sides of a nonempty string.
 -}
-trim : Nonempty -> String
+trim : NonemptyString -> String
 trim =
     toString >> String.trim
 
 
 {-| Get rid of whitespace on the left of a nonempty string.
 -}
-trimLeft : Nonempty -> String
+trimLeft : NonemptyString -> String
 trimLeft =
     toString >> String.trimLeft
 
 
 {-| Get rid of whitespace on the right of a nonempty string.
 -}
-trimRight : Nonempty -> String
+trimRight : NonemptyString -> String
 trimRight =
     toString >> String.trimRight
 
 
 {-| Transform every character in a nonempty string
 -}
-map : (Char -> Char) -> Nonempty -> Nonempty
-map charFunc (Nonempty head_ tail_) =
-    Nonempty (charFunc head_) (String.map charFunc tail_)
+map : (Char -> Char) -> NonemptyString -> NonemptyString
+map charFunc (NonemptyString head_ tail_) =
+    NonemptyString (charFunc head_) (String.map charFunc tail_)
 
 
 {-| Keep only the characters that pass the test.
 -}
-filter : (Char -> Bool) -> Nonempty -> String
+filter : (Char -> Bool) -> NonemptyString -> String
 filter filterFunc =
     toString >> String.filter filterFunc
 
 
 {-| Reduce a nonempty string from the left.
 -}
-foldl : (Char -> b -> b) -> b -> Nonempty -> b
+foldl : (Char -> b -> b) -> b -> NonemptyString -> b
 foldl foldFunc value =
     toString >> String.foldl foldFunc value
 
 
 {-| Reduce a nonempty string from the right.
 -}
-foldr : (Char -> b -> b) -> b -> Nonempty -> b
+foldr : (Char -> b -> b) -> b -> NonemptyString -> b
 foldr foldFunc value =
     toString >> String.foldr foldFunc value
 
 
 {-| Determine whether _any_ characters pass the test.
 -}
-any : (Char -> Bool) -> Nonempty -> Bool
+any : (Char -> Bool) -> NonemptyString -> Bool
 any anyFunc =
     toString >> String.any anyFunc
 
 
 {-| Determine whether _all_ characters pass the test.
 -}
-all : (Char -> Bool) -> Nonempty -> Bool
+all : (Char -> Bool) -> NonemptyString -> Bool
 all allFunc =
     toString >> String.all allFunc
 
 
 {-| Create a nonempty string from an ordinary string, failing on the empty string.
 -}
-fromString : String -> Maybe Nonempty
+fromString : String -> Maybe NonemptyString
 fromString text =
     case String.uncons text of
         Just ( head_, tail_ ) ->
-            Nonempty head_ tail_ |> Just
+            NonemptyString head_ tail_ |> Just
 
         Nothing ->
             Nothing
@@ -339,67 +339,67 @@ fromString text =
 
 {-| Convert to an ordinary string.
 -}
-toString : Nonempty -> String
-toString (Nonempty head_ tail_) =
+toString : NonemptyString -> String
+toString (NonemptyString head_ tail_) =
     String.cons head_ tail_
 
 
 {-| Get the first character in the nonempty string.
 -}
-head : Nonempty -> Char
-head (Nonempty head_ _) =
+head : NonemptyString -> Char
+head (NonemptyString head_ _) =
     head_
 
 
 {-| Return all the characters after the first one.
 -}
-tail : Nonempty -> String
-tail (Nonempty _ tail_) =
+tail : NonemptyString -> String
+tail (NonemptyString _ tail_) =
     tail_
 
 
 {-| See if the second string contains the first one.
 -}
-contains : String -> Nonempty -> Bool
+contains : String -> NonemptyString -> Bool
 contains substring =
     toString >> String.contains substring
 
 
 {-| See if the second string starts with the first one.
 -}
-startsWith : String -> Nonempty -> Bool
+startsWith : String -> NonemptyString -> Bool
 startsWith prefix =
     toString >> String.startsWith prefix
 
 
 {-| See if the second string ends with the first one.
 -}
-endsWith : String -> Nonempty -> Bool
+endsWith : String -> NonemptyString -> Bool
 endsWith prefix =
     toString >> String.endsWith prefix
 
 
 {-| Get all of the indexes for a substring in another string.
 
-    indexes "i" (Nonempty 'M' "ississippi") == [ 1, 4, 7, 10 ]
+    indexes "i" (NonemptyString 'M' "ississippi") == [ 1, 4, 7, 10 ]
 
-    indexes "ss" (Nonempty 'M' "ississippi") == [ 2, 5 ]
+    indexes "ss" (NonemptyString 'M' "ississippi") == [ 2, 5 ]
 
 -}
-indexes : String -> Nonempty -> List Int
+indexes : String -> NonemptyString -> List Int
 indexes text =
     toString >> String.indexes text
 
 
 {-| Alias for `indexes`.
 -}
-indices : String -> Nonempty -> List Int
+indices : String -> NonemptyString -> List Int
 indices text =
     toString >> String.indices text
 
 
 {-| To be used internally when we are certain that the string is already nonempty.
 -}
-unsafeFromString : String -> Nonempty
+unsafeFromString : String -> NonemptyString
 unsafeFromString =
-    fromString >> Maybe.withDefault (Nonempty ' ' "")
+    fromString >> Maybe.withDefault (NonemptyString ' ' "")

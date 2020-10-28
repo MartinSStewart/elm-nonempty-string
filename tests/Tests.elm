@@ -17,13 +17,13 @@ suite =
                         String.concat [ Nonempty.toString a, Nonempty.toString b, Nonempty.toString c ]
 
                     a =
-                        Nonempty.Nonempty 'E' "xpected"
+                        Nonempty.NonemptyString 'E' "xpected"
 
                     b =
-                        Nonempty.Nonempty ' ' "test"
+                        Nonempty.NonemptyString ' ' "test"
 
                     c =
-                        Nonempty.Nonempty ' ' "result"
+                        Nonempty.NonemptyString ' ' "result"
                 in
                 List.Nonempty.Nonempty a [ b, c ]
                     |> Nonempty.concat
@@ -62,4 +62,4 @@ fuzzNonemptyList fuzzer =
 
 
 fuzzNonemptyString =
-    Fuzz.map2 Nonempty.Nonempty Fuzz.char Fuzz.string
+    Fuzz.map2 Nonempty.NonemptyString Fuzz.char Fuzz.string

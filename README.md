@@ -6,16 +6,16 @@ A string that is known at compile time to have at least one character in it.
 ```elm
 import String.Nonempty exposing (..)
 
-text : Nonempty
-text = Nonempty 'H' "ere's some nonempty text"
+text : NonemptyString
+text = NonemptyString 'H' "ere's some nonempty text"
 
-text2 : Maybe Nonempty
+text2 : Maybe NonemptyString
 text2 = fromString "More text"
 
-singleSpace : Nonempty
+singleSpace : NonemptyString
 singleSpace = fromChar ' '
 
-value : Nonempty
+value : NonemptyString
 value = fromInt 2
 ```
 
